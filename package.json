@@ -1,0 +1,26 @@
+{
+  "name": "Chunker",
+  "version": "0.1.0",
+  "description": "Tool for Downloading M3U8 stream chunks from Supported sites",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanout96/Chunker.git"
+  },
+  "author": "Fanout96 <fanout96@users.noreply.github.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fanout96/Chunker/issues"
+  },
+  "homepage": "https://github.com/fanout96/Chunker#readme",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "m3u8-parser": "^3.0.0",
+    "path": "^0.12.7",
+    "simple-get": "^2.7.0",
+    "uuid": "^3.1.0",
+    "node-datetime": "latest"
+	
+  }
+}
