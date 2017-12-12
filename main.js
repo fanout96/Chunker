@@ -36,27 +36,24 @@ function GetPlayList() {
             var Recording = (Object.keys(chunklist).length > 0);
 
             if (!Streaming && Recording) {
-                console.log("Стрим закончен");
+                console.log("Stream ended");
                 timerId = setTimeout(GetChunkList, 60 * 60 * 1000);
-                ConcatChunks(); /*Стрим закончен Обработать данные*/
+                ConcatChunks();
             } else if (!Streaming && !Recording) {
-                console.log("Стрим не найден");
-                process.exit(0); /*Стрим не найден обновите плейлист*/
+                console.log("Stream not found");
+                process.exit(0); 
             } else {
-                console.log("Стрим найден");
+                console.log("Stream found");
 
                 var Resolutions = getResolutions(res.body);
                 var ResKeys = Object.keys(Resolutions);
-                console.log("Доступные разрешения: ", Object.keys(Resolutions));
+                console.log("Available Resolutions : ", Object.keys(Resolutions));
 
                 var low = ResKeys.slice(0).shift();
-                console.log("Минимальное разрешение: ", low);
-
-                var srres = ResKeys[ResKeys.length / 2];
-                console.log("Среднее разрешение: ", srres);
+                console.log("Min Resolution: ", low);
 
                 var high = ResKeys.slice(-1).pop();
-                console.log("Максимальное разрешение: ", high);
+                console.log("Max Resolution: ", high);
 
                 chunklisturl = source.substring(0, source.length - 13) + Resolutions[high];
 
@@ -80,39 +77,39 @@ function GetChunkList() {
 
 
             if (!Streaming && Recording) {
-                console.log("Стрим закончен");
+                console.log("Stream Ended");
                 timerId = setTimeout(GetChunkList, 60 * 60 * 1000);
-                ConcatChunks(); /*Стрим закончен Обработать данные*/
+                ConcatChunks(); 
             } else if (!Streaming && !Recording) {
-                console.log("Чанки не найдены");
-                process.exit(0); /*Стрим не найден обновите плейлист*/
+                console.log("Chunks not found");
+                process.exit(0); 
             } else if (!shutdown) {
                 timerId = setTimeout(GetChunkList, 500);
                 var ch = getChunks(res.body);
-                console.log("Чанки найдены: " + ch);
+                console.log("Found Chunks: " + ch);
                 ch.forEach(function(entry) {
 
                     var chunkid = entry.toString().split('_').pop();
 
                     if (!chunklist.hasOwnProperty(chunkid)) {
 
-                        console.log("Загрузка чанка: ", chunkid, ":", entry);
+                        console.log("Downloading Chunk: ", chunkid, ":", entry);
                         var file = path.resolve(uuidpath, chunkid);
                         chunklist[chunkid] = true;
                         try {
                             get(source.substring(0, source.length - 13) + entry, function(err2, res2) {
                                 if (err2) {
                                     console.log(err2);
-                                    console.log("Ошибка загрузки чанка: ", chunkid);
+                                    console.log("Loading Chunk Erorr: ", chunkid);
                                     chunklist[chunkid] = false;
                                 }
 
-                                var stream = res2.pipe(fs.createWriteStream(file)) // `res` is a stream
+                                var stream = res2.pipe(fs.createWriteStream(file))
                                 stream.on('finish', function() {
-                                    console.log("Загружен чанк: ", chunkid);
+                                    console.log("Downloaded Chunk: ", chunkid);
                                 });
                                 stream.on('error', function() {
-                                    console.log("Ошибка загрузки чанка: ", chunkid);
+                                    console.log("Error Downloading Chunk: ", chunkid);
                                     chunklist[chunkid] = false;
                                 });
                             });
